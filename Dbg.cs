@@ -1,73 +1,71 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections;
-using System.Diagnostics;
 using System.IO;
 
-public class Dbg
+namespace BrainVR.UnityLogger
 {
-	//-------------------------------------------------------------------------------------------------------------------------
-	public		string			LogFile = "unity-log.txt";
-	public		bool			EchoToConsole = true;
-	public		bool			AddTimeStamp = true;
-
-	//-------------------------------------------------------------------------------------------------------------------------
-	private		StreamWriter	OutputStream;
-
-	//-------------------------------------------------------------------------------------------------------------------------
-	static Dbg Singleton = null;
-
-    public Dbg()
+    public class Dbg
     {
-        OutputStream = new StreamWriter("unity-log.txt", true);
-        Singleton = this;
-    }
+        //-------------------------------------------------------------------------------------------------------------------------
+        public string LogFile = "unity-log.txt";
 
-	//-------------------------------------------------------------------------------------------------------------------------
-	public static Dbg Instance
-	{
-        get { if (Singleton == null) new Dbg(); return Singleton; }
-	}
+        public bool EchoToConsole = true;
+        public bool AddTimeStamp = true;
 
-	private void Write( string message )
-	{
-#if DEBUG
-		if ( AddTimeStamp )
-		{
-			DateTime now = DateTime.Now;
-			message = string.Format("[{0:H:mm:ss}] {1}", now, message );
-		}
+        //-------------------------------------------------------------------------------------------------------------------------
+        private StreamWriter OutputStream;
 
-        if (OutputStream == null)
+        //-------------------------------------------------------------------------------------------------------------------------
+        static Dbg Singleton = null;
+
+        public Dbg()
         {
-            UnityEngine.Debug.Log("OutputStream is NULL!");
-            OutputStream = new StreamWriter(Application.dataPath + "/" + "unity-log.txt", true);
+            OutputStream = new StreamWriter("unity-log.txt", true);
+            Singleton = this;
         }
-		if ( OutputStream != null )
-		{
-			OutputStream.WriteLine( message );
-			OutputStream.Flush();
-		}
-
-		if ( EchoToConsole )
-		{
-			UnityEngine.Debug.Log( message );
-		}
-#endif
-	}
-
-	//-------------------------------------------------------------------------------------------------------------------------
-	//[Conditional("DEBUG"), Conditional("PROFILE")]
-	public static void Trace( string Message)
-	{
+        //-------------------------------------------------------------------------------------------------------------------------
+        public static Dbg Instance
+        {
+            get
+            {
+                if (Singleton == null) new Dbg();
+                return Singleton;
+            }
+        }
+        private void Write(string message)
+        {
 #if DEBUG
-		if ( Dbg.Instance != null )
-			Dbg.Instance.Write( Message );
-		else
-			// Fallback if the debugging system hasn't been initialized yet.
-			UnityEngine.Debug.Log( Message );
+            if (AddTimeStamp)
+            {
+                DateTime now = DateTime.Now;
+                message = string.Format("[{0:H:mm:ss}] {1}", now, message);
+            }
+            if (OutputStream == null)
+            {
+                UnityEngine.Debug.Log("OutputStream is NULL!");
+                OutputStream = new StreamWriter(Application.dataPath + "/" + "unity-log.txt", true);
+            }
+            if (OutputStream != null)
+            {
+                OutputStream.WriteLine(message);
+                OutputStream.Flush();
+            }
+            if (EchoToConsole)
+            {
+                UnityEngine.Debug.Log(message);
+            }
 #endif
-	}
+        }
+        //-------------------------------------------------------------------------------------------------------------------------
+        //[Conditional("DEBUG"), Conditional("PROFILE")]
+        public static void Trace(string Message)
+        {
+#if DEBUG
+            if (Dbg.Instance != null) Dbg.Instance.Write(Message);
+            else Debug.Log(Message);
+#endif
+        }
 
 
+    }
 }
