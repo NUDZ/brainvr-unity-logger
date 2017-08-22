@@ -1,28 +1,45 @@
-﻿namespace BrainVR.UnityLogger.Interfaces
+﻿using System;
+
+namespace BrainVR.UnityLogger.Interfaces
 {
-    public enum ExperimentState { }
-    public enum ExperimentEvent { }
-    public enum TrialState { }
-    public enum TrialEvent { }
-
-    public delegate void ExperimentStateHandler(IExperiment ex, ExperimentState fromState, ExperimentState toState);
-    public delegate void ExperimentEventHandler(IExperiment ex, ExperimentEvent experimentEvent);
-    public delegate void TrialStateHandler(IExperiment ex, TrialState fromState, TrialState toState);
-    public delegate void TrialEventHandler(IExperiment ex, string s);
-    public delegate void ExperimentCustomMessageHandler(IExperiment ex, string message);
-
+    public class ExperimentStateArgs : EventArgs
+    {
+        public IExperiment Experiment;
+        public string FromState;
+        public string ToState;
+    }
+    public class ExperimentEventArgs : EventArgs
+    {
+        public IExperiment Experiment;
+        public string Event;
+    }
+    public class TrialStateArgs : EventArgs
+    {
+        public IExperiment Experiment;
+        public string FromState;
+        public string ToState;
+    }
+    public class TrialEventArgs : EventArgs
+    {
+        public IExperiment Experiment;
+        public string Event;
+    }
+    public class ExperimentMessageArgs : EventArgs
+    {
+        public IExperiment Experiment;
+        public string Message;
+    }
     public interface IExperiment
     {
         string Name { get; }
         int TrialNumber { get; }
         int ExperimentNumber { get; }
 
-        event ExperimentStateHandler ExperimentStateChanged;
-        event ExperimentEventHandler ExpeirmentEventSent;
-        event TrialStateHandler TrialStateChanged;
-        event TrialEventHandler TrialEventSent;
-        event ExperimentCustomMessageHandler SendExperimentMessage;
-
+        event EventHandler<ExperimentStateArgs> ExperimentStateChanged;
+        event EventHandler<ExperimentEventArgs> ExpeirmentEventSent;
+        event EventHandler<TrialStateArgs> TrialStateChanged;
+        event EventHandler<TrialEventArgs> TrialEventSent;
+        event EventHandler<ExperimentMessageArgs> MessageSent;
         string ExperimentHeaderLog();
     }
 }

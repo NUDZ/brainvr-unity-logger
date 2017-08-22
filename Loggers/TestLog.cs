@@ -53,13 +53,13 @@ namespace BrainVR.UnityLogger
             experiment.TrialStateChanged += LogTrialStateChanged;
             experiment.ExpeirmentEventSent += LogExperimentEvent;
             experiment.TrialEventSent += LogTrialEvent;
-            experiment.SendExperimentMessage += LogCustomExperimentMessage;
+            experiment.MessageSent += LogCustomExperimentMessage;
         }
         private void Unsubcribe(IExperiment experiment)
         {
             experiment.ExperimentStateChanged -= LogExperimentStateChanged;
             experiment.TrialStateChanged -= LogTrialStateChanged;
-            experiment.SendExperimentMessage -= LogCustomExperimentMessage;
+            experiment.MessageSent -= LogCustomExperimentMessage;
             experiment.ExpeirmentEventSent -= LogExperimentEvent;
             experiment.TrialEventSent -= LogTrialEvent;
         }
@@ -68,29 +68,29 @@ namespace BrainVR.UnityLogger
             AddTimestamp(ref strgs);
             WriteLine(strgs);
         }
-        private void LogCustomExperimentMessage(IExperiment ex, string message)
+        private void LogCustomExperimentMessage(object obj, ExperimentMessageArgs args)
         {
-            List<string> toWrite = new List<string> {message};
+            List<string> toWrite = new List<string> {args.Message};
             WriteEvent(toWrite);
         }
-        private void LogTrialStateChanged(IExperiment ex, TrialState fromstate, TrialState toState)
+        private void LogTrialStateChanged(object obj, TrialStateArgs args)
         {
-            List<string> toWrite = new List<string> {"Trial", ex.TrialNumber.ToString(), toState.ToString() };
+            List<string> toWrite = new List<string> {"Trial", args.Experiment.TrialNumber.ToString(), args.ToState };
             WriteEvent(toWrite);
         }
-        private void LogTrialEvent(IExperiment ex, string trialevent)
+        private void LogTrialEvent(object obj, TrialEventArgs args)
         {
-            List<string> toWrite = new List<string> { "Trial", ex.TrialNumber.ToString(), trialevent};
+            List<string> toWrite = new List<string> { "Trial", args.Experiment.TrialNumber.ToString(), args.Event};
             WriteEvent(toWrite);
         }
-        private void LogExperimentStateChanged(IExperiment ex, ExperimentState fromstate, ExperimentState toState)
+        private void LogExperimentStateChanged(object obj, ExperimentStateArgs args)
         {
-            List<string> toWrite = new List<string> {"Experiment", ex.ExperimentNumber.ToString(), toState.ToString()};
+            List<string> toWrite = new List<string> {"Experiment", args.Experiment.ExperimentNumber.ToString(), args.ToState};
             WriteEvent(toWrite);
         }
-        private void LogExperimentEvent(IExperiment ex, ExperimentEvent experimentevent)
+        private void LogExperimentEvent(object obj, ExperimentEventArgs args)
         {
-            List<string> toWrite = new List<string> { "Experiment", ex.ExperimentNumber.ToString(), experimentevent.ToString() };
+            List<string> toWrite = new List<string> { "Experiment", args.Experiment.ExperimentNumber.ToString(), args.Event };
             WriteEvent(toWrite);
         }
         public void StopLogging(IExperiment experiment)
