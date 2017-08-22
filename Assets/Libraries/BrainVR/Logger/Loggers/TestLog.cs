@@ -20,14 +20,14 @@ namespace BrainVR.UnityLogger
             GameObject go = new GameObject();
             var testLog = go.AddComponent<TestLog>();
             testLog._experiment = experiment;
-            go.transform.name = testLog._experiment.name + "_test_log";
+            go.transform.name = testLog._experiment.Name + "_test_log";
             return testLog.PrepareLogging(go, testLog._experiment, id);
         }
         private TestLog PrepareLogging(GameObject go, IExperiment experiment, string id)
         {
             //parents itself under Logging thing - under master
             go.transform.SetParent(MasterLog.Instance.transform);
-            Log = new Log(id, "test_" + experiment.name);
+            Log = new Log(id, "test_" + experiment.Name);
             return this;
         }
         public void StartLogging()

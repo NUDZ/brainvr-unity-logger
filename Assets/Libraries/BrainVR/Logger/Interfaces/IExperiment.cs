@@ -13,7 +13,7 @@
 
     public interface IExperiment
     {
-        string name { get; }
+        string Name { get; }
         int TrialNumber { get; }
         int ExperimentNumber { get; }
 
