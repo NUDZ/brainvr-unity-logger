@@ -39,13 +39,11 @@ namespace BrainVR.UnityLogger
                 _lastTimeWrite = SystemTimer.timeSinceMidnight;
             }
         }
-
         void SetupLog()
         {
             if (!Player) Player = GameObject.FindGameObjectWithTag("Player");
             Log.WriteLine("Time; Position; Rotation.X; Rotation.Y; FPS; Input;");
         }
-
         public void StartLogging()
         {
             if (Logging) return;
@@ -54,14 +52,12 @@ namespace BrainVR.UnityLogger
             _lastTimeWrite = SystemTimer.timeSinceMidnight;
             Logging = true;
         }
-
         public void StopLogging()
         {
             if (!Logging) return;
             InputManagerBase.ButtonPressed -= LogPlayerInput;
             Logging = false;
         }
-
         public void LogPlayerInput(string input)
         {
             List<string> strgs = PlayerInformation();

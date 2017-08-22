@@ -13,13 +13,11 @@ namespace BrainVR.UnityLogger
             _log = new Log("NEO", LogName, timeStamp);
             WriteExperimentData();
         }
-
         public void Instantiate(string timeStamp, string id)
         {
             _log = new Log(id, LogName, timeStamp);
             WriteExperimentData();
         }
-
         private void WriteExperimentData()
         {
             _log.WriteLine("***EXPERIMENT INFO***");

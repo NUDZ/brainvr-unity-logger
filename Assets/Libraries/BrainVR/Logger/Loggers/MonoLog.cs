@@ -23,7 +23,6 @@ namespace BrainVR.UnityLogger
             Close();
         }
         #endregion
-
         public abstract void Instantiate(string str);
         public virtual void Close()
         {

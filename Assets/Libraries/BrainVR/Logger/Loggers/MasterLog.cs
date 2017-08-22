@@ -18,7 +18,6 @@ namespace BrainVR.UnityLogger
             if (participantId == null) participantId = ExperimentInfo.Instance.Participant.Id;
             InstantiateLoggers(participantId);
         }
-
         //RETURNS if logs already exist, otherwise reinstantiates them
         void InstantiateLoggers(string participantId)
         {
@@ -41,17 +40,14 @@ namespace BrainVR.UnityLogger
                 _experimentInfoLog.Instantiate(_creationTimestamp);
             }
         }
-
         public void StartLogging()
         {
             if(_playerLog) _playerLog.StartLogging();
         }
-
         public void StopLogging()
         {
             if (_playerLog) _playerLog.StopLogging();
         }
-
         public void CloseLogs()
         {
             StopLogging();
