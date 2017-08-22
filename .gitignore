@@ -34,6 +34,14 @@ ehthumbs.db
 [Tt]humbs.db
 [Dd]esktop.ini
 
+# ============ #
+# LOGS #
+# ============ #
 logs/
-
 Assets/logs\.meta
+
+# ============ #
+# SPECIAL #
+# ============ #
+LICENSE.meta
+README.md.meta
