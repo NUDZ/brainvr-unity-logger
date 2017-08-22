@@ -42,11 +42,22 @@ namespace BrainVR.UnityLogger
         void SetupLog()
         {
             if (!Player) Player = GameObject.FindGameObjectWithTag("Player");
+            if (!Player)
+            {
+                Debug.Log("There is no player Game object. Cannot setup player log.");
+                Log.WriteLine("There is no player Game object in the game. Can't log");
+                return;
+            }
             Log.WriteLine("Time; Position; Rotation.X; Rotation.Y; FPS; Input;");
         }
         public void StartLogging()
         {
             if (Logging) return;
+            if (!Player)
+            {
+                Debug.Log("There is no player Game object. Cannot start player log.");
+                return;
+            }
             //this is the header line for analysiss software
             InputManagerBase.ButtonPressed += LogPlayerInput;
             _lastTimeWrite = SystemTimer.timeSinceMidnight;
