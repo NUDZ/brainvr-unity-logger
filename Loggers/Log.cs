@@ -45,7 +45,7 @@ namespace BrainVR.UnityLogger
                 timeStamp = dateTime.ToString("HH-mm-ss-dd-MM-yyy");
             }
             // path + id/day-month-year
-            string folderName = id + "/" + DateTime.Now.ToString("dd-MM-yyy") + "/";
+            string folderName = id + "_" + DateTime.Now.ToString("dd-MM-yyy") + "/";
 
             FilePath = Application.dataPath + RELATIVE_PATH + folderName;
             //creates a folder for the patient, if it doesnt exist
