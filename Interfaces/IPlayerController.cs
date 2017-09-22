@@ -1,7 +1,10 @@
-﻿namespace BrainVR.UnityLogger.Interfaces
+﻿using System.Collections.Generic;
+
+namespace BrainVR.UnityLogger.Interfaces
 {
     public interface IPlayerController
     {
-        IPlayerController Instance { get; }
+        string HeaderLine();
+        List<string>  PlayerInformation();
     }
 }
