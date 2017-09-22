@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BrainVR.UnityLogger.Interfaces;
 using UnityEngine;
 
 //REquires an objsect with a player tag to be present
@@ -8,12 +9,20 @@ namespace BrainVR.UnityLogger
     public class PlayerLog : MonoLog
     {
         public GameObject Player;
+
+        private IPlayerController _playerController;
         //HOW OFTEN DO YOU WANNA LOG
         //applies only to children that can log continuously (Plyer Log), not to those that log based on certain events (Quest log, Experiment log)
         public float LoggingFrequency = 0.005F;
 
         float _deltaTime;
         private double _lastTimeWrite;
+
+        //this is for filling in custom number of fields that follow after common fields
+        // for example, we need one column for input, but it is not always used, so we need to
+        // create empty single column
+        private const int NEmpty = 1;
+
 
         public override void Instantiate(string timeStamp)
         {
@@ -25,6 +34,7 @@ namespace BrainVR.UnityLogger
             Log = new Log(id, "player", timeStamp);
             SetupLog();
         }
+        #region MonoBehaviour
         void Update()
         {
             //calculating FPS
@@ -35,10 +45,11 @@ namespace BrainVR.UnityLogger
             if (!Logging) return;
             if (_lastTimeWrite + LoggingFrequency < SystemTimer.timeSinceMidnight)
             {
-                WriteLine(CollectData());
+                LogPlayerUpdate();
                 _lastTimeWrite = SystemTimer.timeSinceMidnight;
             }
         }
+        #endregion
         void SetupLog()
         {
             if (!Player) Player = GameObject.FindGameObjectWithTag("Player");
@@ -48,7 +59,14 @@ namespace BrainVR.UnityLogger
                 Log.WriteLine("There is no player Game object in the game. Can't log");
                 return;
             }
-            Log.WriteLine("Time; Position; Rotation.X; Rotation.Y; FPS; Input;");
+            _playerController = Player.GetComponent<IPlayerController>();
+            if (_playerController == null)
+            {
+                Debug.Log("player GO does not have Player Controller component.");
+                Log.WriteLine("There is no valid player Game object in the game. Can't log");
+                return;
+            }
+            Log.WriteLine(_playerController.HeaderLine());
         }
         public void StartLogging()
         {
@@ -71,9 +89,14 @@ namespace BrainVR.UnityLogger
         }
         public void LogPlayerInput(string input)
         {
-            List<string> strgs = PlayerInformation();
-            AddTimestamp(ref strgs);
+            var strgs = CollectData();
             AddValue(ref strgs, input);
+            WriteLine(strgs);
+        }
+        public void LogPlayerUpdate()
+        {
+            var strgs = CollectData();
+            strgs.AddRange(WriteBlank(NEmpty));
             WriteLine(strgs);
         }
         /// <summary>
@@ -82,27 +105,11 @@ namespace BrainVR.UnityLogger
         protected List<string> CollectData()
         {
             //TestData to Write is a parent method that adds some information to the beginning of the player info
-            List<string> strgs = PlayerInformation();
+            List<string> strgs = _playerController.PlayerInformation();
             AddTimestamp(ref strgs);
+            //adds FPS
+            AddValue(ref strgs, (1.0f / _deltaTime).ToString("F4"));
             //needs an empty column for possible input information
-            strgs.AddRange(WriteBlank(1));
-            return strgs;
-        }   
-        /// <summary>
-        /// Function to prepare a c# list of strings to be written to the appropriate log file
-        /// </summary>
-        /// <returns>List of strings</returns>
-        private List<string> PlayerInformation()
-        {
-            List<string> strgs = new List<string>();
-            //logging position
-            strgs.Add(Player.transform.position.ToString("F4"));
-            //logging rotation
-            strgs.Add(Player.transform.eulerAngles.y.ToString("F4"));
-            //logging rotation
-            strgs.Add(Camera.main.transform.eulerAngles.x.ToString("F4"));
-            //loggin FPS
-            strgs.Add((1.0f/_deltaTime).ToString("F4"));
             return strgs;
         }
     }
