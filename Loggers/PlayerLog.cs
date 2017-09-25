@@ -23,6 +23,9 @@ namespace BrainVR.UnityLogger
         // create empty single column
         private const int NEmpty = 1;
 
+        //Ends the header line with values that this log is responsible for, not the IPlayerController
+        private const string HEADER_ENDING = "FPS; Input;";
+
 
         public override void Instantiate(string timeStamp)
         {
@@ -66,7 +69,7 @@ namespace BrainVR.UnityLogger
                 Log.WriteLine("There is no valid player Game object in the game. Can't log");
                 return;
             }
-            Log.WriteLine(_playerController.HeaderLine());
+            Log.WriteLine(_playerController.HeaderLine() + HEADER_ENDING);
         }
         public void StartLogging()
         {
